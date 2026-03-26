@@ -1,0 +1,48 @@
+#version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: demo-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  order-service:
+    # build: ./Order-Service
+    container_name: demo-order-service
+    image: doc1014/demo-order-service:1.0
+    depends_on:
+      - kafka
+    ports:
+      - "8081:8081"
+
+  payment-service:
+    # build: ./Payment-Service
+    image: doc1014/demo-payment-service:1.0
+    container_name: demo-payment-service
+    depends_on:
+      - kafka
+    ports:
+      - "8082:8082"
+
+  # notification-service:
+  #   # build: ./Notification-Service
+  #   image: doc1014/demo-payment-service:1.0
+  #   container_name: demo-notification-service
+  #   depends_on:
+  #     - kafka
+  #   ports:
+  #     - "8083:8083"      
