@@ -37,12 +37,12 @@ services:
       - kafka
     ports:
       - "8082:8082"
-
-  # notification-service:
-  #   # build: ./Notification-Service
-  #   image: doc1014/demo-payment-service:1.0
-  #   container_name: demo-notification-service
-  #   depends_on:
-  #     - kafka
-  #   ports:
-  #     - "8083:8083"      
+  
+  notification-service:
+    # build: ./Notification-Service
+    image: doc1014/demo-payment-service:1.0
+    container_name: demo-notification-service
+    depends_on:
+      - kafka
+    ports:
+      - "8083:8083"      
